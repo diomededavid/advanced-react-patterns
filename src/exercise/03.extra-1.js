@@ -8,6 +8,7 @@ import {Switch} from '../switch'
 // 📜 https://reactjs.org/docs/context.html#reactcreatecontext
 
 const ToggleContext = React.createContext()
+ToggleContext.displayName = "ToggleContext"
 
 function Toggle({children}) {
   const [on, setOn] = React.useState(false)
@@ -17,8 +18,13 @@ function Toggle({children}) {
   // the value is an object that has `on` and `toggle` on it.
   return <ToggleContext.Provider value={{on, toggle}}>{children}</ToggleContext.Provider>
 }
+
 function useToggle() {
-  return React.useContext(ToggleContext)
+  const context = React.useContext(ToggleContext)
+  if (!context) {
+    throw new Error('useToggle must be used within a <Toggle/>')
+  }
+  return context
 }
 
 // 🐨 we'll still get the children from props (as it's passed to us by the
